@@ -1,0 +1,71 @@
+body {
+	background-image: url(http://wallpaperscraft.com/image/texture_triangles_abstraction_77205_2560x1440.jpg);
+	background-position: fixed;
+	background-attachment: fixed;
+}
+
+main {
+	background-color: rgba(255, 255, 255, 0.75);
+	box-shadow: 0 0 5px rgba(0,0,0,0.9) inset !important;
+}
+
+nav {
+	line-height: 0 !important;
+}
+
+.top-nav {
+	background-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.table-of-contents a:hover{color:#888;}
+.table-of-contents a.active{padding-left:25px;border-left:5px solid #ea4a4f}
+
+.face {
+	margin: 15px auto;
+	height: 200px;
+	width: 200px;
+	background: url(https://avatars1.githubusercontent.com/u/4415126?v=3&s=460);
+	background-size: 200px 200px;
+	box-shadow: inset 3px 3px 3px rgba(0,0,0,0.5);
+	border-radius: 100%;
+}
+
+.social {text-align: center;}
+.social a {display: inline-block !important; padding: 3px 10px !important; margin: 5px 5px 15px 5px !important;}
+
+.sociall {text-align: center;}
+.sociall a {display: inline-block !important; padding: 3px 10px !important; margin: 5px 5px 15px 5px !important;}
+
+footer {box-shadow: 0 0 5px rgba(0,0,0,0.9) !important;background-color: rgba(0, 0, 0, 0.25) !important;}
+
+.cert {
+	text-align: center;
+	height: 250;
+	padding: 0 !important;
+}
+.cert p {
+	padding: 0 !important;
+}
+
+.cert.s4 {
+
+}
+
+.cert.m3 {
+
+}
+
+.cert.l2 {
+
+}
+
+.row .col.s4 {
+    width: 33.3333333333%;
+    margin-left: auto;
+    left: auto;
+    right: auto;
+}
+
+.row .col {
+
+}
