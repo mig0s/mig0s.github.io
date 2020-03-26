@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mikhail Gospodarikov">
+    <title>Patcher</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        textarea {
+            resize: both !important
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-1">
+                <p>&nbsp;</p>
+            </div>
+            <div class="col-sm">
+                <b>Source:</b>
+            </div>
+            <div class="col-sm-1">
+                <p>&nbsp;</p>
+            </div>
+            <div class="col-sm">
+                <b>Target:</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <form>
+                    <div class="form-group row">
+                        <div class="col-sm-1 text-right">
+                            <p>Server</p>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" id="SourceServer">
+                        </div>
+                        <div class="col-sm-1 text-center">
+                            <p>to</p>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" id="TargetServer">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-1 text-right">
+                            <p>Database</p>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" id="SourceDatabase">
+                        </div>
+                        <div class="col-sm-1 text-center">
+                            <p>to</p>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" id="TargetDatabase">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-1 text-right">
+                            <p>Table</p>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" id="SourceTable">
+                        </div>
+                        <div class="col-sm-1 text-center">
+                            <p>to</p>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" id="TargetTable">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-1 text-right">
+                            <p>Columns</p>
+                        </div>
+                        <div class="col-sm">
+                            <textarea class="form-control" id="SourceColumns" rows="3"></textarea>
+                        </div>
+                        <div class="col-sm-1 text-center">
+                            <p>to</p>
+                        </div>
+                        <div class="col-sm">
+                            <textarea class="form-control" id="TargetColumns" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-1 text-right">
+                            <p>PKs</p>
+                        </div>
+                        <div class="col-sm">
+                            <textarea class="form-control" id="SourcePKs" rows="3"></textarea>
+                        </div>
+                        <div class="col-sm-1 text-center">
+                            <p>to</p>
+                        </div>
+                        <div class="col-sm">
+                            <textarea class="form-control" id="TargetPKs" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-1">
+                            <p>&nbsp;</p>
+                        </div>
+                        <div class="col-sm">
+                            <button id="Create" type="button" class="btn btn-success">Create</button>
+                            <button id="Copy" type="button" class="btn btn-primary">&nbsp;Copy&nbsp;</button>
+                            <button id="Reset" type="button" class="btn btn-warning">&nbsp;Reset&nbsp;</button>
+                            <button id="Clear" type="button" class="btn btn-danger">&nbsp;Clear&nbsp;</button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-1 text-right">
+                            <p>Script</p>
+                        </div>
+                        <div class="col-sm">
+                            <textarea class="form-control" id="Script" rows="15"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            var SourceServer = '';
+            var SourceDatabase = '';
+            var SourceTable = '';
+            var SourceColumns = [];
+            var SourcePKs = [];
+            var TargetServer = '';
+            var TargetDatabase = '';
+            var TargetTable = '';
+            var TargetColumns = [];
+            var TargetPKs = [];
+            var Script = ``;
+            $("#SourceServer").on("input", function () {
+                SourceServer = $("#SourceServer").val();
+                $("#TargetServer").val(SourceServer);
+            });
+            $("#SourceDatabase").on("input", function () {
+                SourceDatabase = $("#SourceDatabase").val();
+                $("#TargetDatabase").val(SourceDatabase);
+            });
+            $("#SourceTable").on("input", function () {
+                SourceTable = $("#SourceTable").val();
+                $("#TargetTable").val(SourceTable);
+            });
+            $("#SourceColumns").on("input", function () {
+                SourceColumns = $("#SourceColumns").val();
+                $("#TargetColumns").val(SourceColumns);
+            });
+            $("#SourcePKs").on("input", function () {
+                SourcePKs = $("#SourcePKs").val();
+                $("#TargetPKs").val(SourcePKs);
+            });
+            $("#Copy").click(function () {
+                $("#Script").select();
+                document.execCommand("copy");
+            });
+            $("#Reset").click(function () {
+                $("#Script").val('');
+            });
+            $("#Clear").click(function () {
+                $(":input").val('');
+            });
+            $("#Create").click(function () {
+                SourceServer = $("#SourceServer").val();;
+                SourceDatabase = $("#SourceDatabase").val();;
+                SourceTable = $("#SourceTable").val();
+                TargetServer = $("#TargetServer").val();
+                TargetDatabase = $("#TargetDatabase").val();
+                TargetTable = $("#TargetTable").val();
+
+                Script = `UPDATE TargetTable
+SET`;
+                SourceColumns = $('#SourceColumns').val().split(/\n/);
+                TargetColumns = $('#TargetColumns').val().split(/\n/);
+
+                for (var i = 0; i < SourceColumns.length; i++) {
+                    Script += `
+    ` + TargetColumns[i] + ` = SourceTable.` + SourceColumns[i];
+                }
+
+                Script += `
+FROM 
+    [` + TargetServer + `].[` + TargetDatabase + `].[dbo].[` + TargetTable + `] TargetTable
+INNER JOIN 
+    [` + SourceServer + `].[` + SourceDatabase + `].[dbo].[` + SourceTable + `] SourceTable
+        ON`;
+
+                SourcePKs = $('#SourcePKs').val().split(/\n/);
+                TargetPKs = $('#TargetPKs').val().split(/\n/);
+
+                for (var i = 0; i < SourcePKs.length; i++) {
+                    Script += `
+            TargetTable.` + TargetPKs[1] + ` = SourceServer.` + SourcePKs[1];
+                }
+
+                $("#Script").val(Script);
+            });
+
+        });
+    </script>
+</body>
+</html>
