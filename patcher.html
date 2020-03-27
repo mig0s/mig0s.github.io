@@ -194,8 +194,13 @@ SET`;
                 TargetColumns = $('#TargetColumns').val().split(/\n/);
 
                 for (var i = 0; i < SourceColumns.length; i++) {
+                    if (i > 0) {
+                    Script += `
+    ,` + TargetColumns[i] + ` = SourceTable.` + SourceColumns[i];
+                    } else {
                     Script += `
     ` + TargetColumns[i] + ` = SourceTable.` + SourceColumns[i];
+                    }
                 }
 
                 Script += `
@@ -209,8 +214,13 @@ INNER JOIN
                 TargetPKs = $('#TargetPKs').val().split(/\n/);
 
                 for (var i = 0; i < SourcePKs.length; i++) {
+                    if (i > 0) {
+                    Script += `
+            AND TargetTable.` + TargetPKs[1] + ` = SourceServer.` + SourcePKs[1];
+                    } else {
                     Script += `
             TargetTable.` + TargetPKs[1] + ` = SourceServer.` + SourcePKs[1];
+                    }
                 }
 
                 $("#Script").val(Script);
