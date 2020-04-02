@@ -106,6 +106,34 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <div class="col-sm-1 text-right">
+                            <p>Company</p>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" id="SourceCompany">
+                        </div>
+                        <div class="col-sm-1 text-center">
+                            <p>to</p>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" id="TargetCompany">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-1 text-right">
+                            <p>App ID</p>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" id="SourceAppID">
+                        </div>
+                        <div class="col-sm-1 text-center">
+                            <p>to</p>
+                        </div>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" id="TargetAppID">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <div class="col-sm-1">
                             <p>&nbsp;</p>
                         </div>
@@ -150,6 +178,8 @@
             var TargetColumns = [];
             var TargetPKs = [];
             var Script = ``;
+            var SpecialCharacters = /\.|\%|\/|\\|\^|\#|\!|\'/gm;
+
             $("#SourceServer").on("input", function () {
                 SourceServer = $("#SourceServer").val();
                 $("#TargetServer").val(SourceServer);
@@ -170,6 +200,7 @@
                 SourcePKs = $("#SourcePKs").val();
                 $("#TargetPKs").val(SourcePKs);
             });
+
             $("#Copy").click(function () {
                 $("#Script").select();
                 document.execCommand("copy");
@@ -187,19 +218,35 @@
                 TargetServer = $("#TargetServer").val();
                 TargetDatabase = $("#TargetDatabase").val();
                 TargetTable = $("#TargetTable").val();
+                
+                SourceColumns = $("#SourceColumns").val().split(/\n/);
+                TargetColumns = $("#TargetColumns").val().split(/\n/);
 
                 Script = `UPDATE TargetTable
 SET`;
-                SourceColumns = $('#SourceColumns').val().split(/\n/);
-                TargetColumns = $('#TargetColumns').val().split(/\n/);
-
                 for (var i = 0; i < SourceColumns.length; i++) {
                     if (i > 0) {
-                    Script += `
-    ,` + TargetColumns[i] + ` = SourceTable.` + SourceColumns[i];
+                        Script += `
+    ,[`;
+                        if($("#TargetCompany").val() != '') {Script += $("#TargetCompany").val() + '$';}
+                        Script += TargetColumns[i].replace(SpecialCharacters, '_');
+                        if($("#TargetAppID").val() != '') {Script += '$' + $("#TargetAppID").val();}
+                        Script += `] = SourceTable.[`;
+                        if($("#TargetCompany").val() != '') {Script += $("#TargetCompany").val() + '$';}
+                        Script += SourceColumns[i].replace(SpecialCharacters, '_');
+                        if($("#SourceAppID").val() != '') {Script += '$' + $("#SourceAppID").val();}
+                        Script += ']';
                     } else {
-                    Script += `
-    ` + TargetColumns[i] + ` = SourceTable.` + SourceColumns[i];
+                        Script += `
+    [`;
+                        if($("#TargetCompany").val() != '') {Script += $("#TargetCompany").val() + '$';}
+                        Script += TargetColumns[i].replace(SpecialCharacters, '_');
+                        if($("#TargetAppID").val() != '') {Script += '$' + $("#TargetAppID").val();}
+                        Script += `] = SourceTable.[`;
+                        if($("#SourceCompany").val() != '') {Script += $("#SourceCompany").val() + '$';}
+                        Script += SourceColumns[i].replace(SpecialCharacters, '_');
+                        if($("#SourceAppID").val() != '') {Script += '$' + $("#SourceAppID").val();}
+                        Script += ']';
                     }
                 }
 
@@ -216,10 +263,10 @@ INNER JOIN
                 for (var i = 0; i < SourcePKs.length; i++) {
                     if (i > 0) {
                     Script += `
-            AND TargetTable.` + TargetPKs[1] + ` = SourceServer.` + SourcePKs[1];
+            AND TargetTable.[` + TargetPKs[i] + `] = SourceServer.[` + SourcePKs[i] + ']';
                     } else {
                     Script += `
-            TargetTable.` + TargetPKs[1] + ` = SourceServer.` + SourcePKs[1];
+            TargetTable.[` + TargetPKs[0] + `] = SourceServer.[` + SourcePKs[0] + ']';
                     }
                 }
 
