@@ -225,29 +225,23 @@ SET`;
                 for (var i = 0; i < SourceColumns.length; i++) {
                     if (i > 0) {
                         Script += `
-    ,[` + TargetColumns[i].replace(SpecialCharacters, '_');
-                        if ($("#TargetAppID").val() != '') { Script += '$' + $("#TargetAppID").val(); }
-                        Script += `] = SourceTable.[` + SourceColumns[i].replace(SpecialCharacters, '_');
-                        if ($("#SourceAppID").val() != '') { Script += '$' + $("#SourceAppID").val(); }
-                        Script += ']';
+    ,[` + TargetColumns[i].replace(SpecialCharacters, '_') + `] = SourceTable.[` + SourceColumns[i].replace(SpecialCharacters, '_') + `]`;
                     } else {
                         Script += `
-    [` + TargetColumns[i].replace(SpecialCharacters, '_');
-                        if ($("#TargetAppID").val() != '') { Script += '$' + $("#TargetAppID").val(); }
-                        Script += `] = SourceTable.[` + SourceColumns[i].replace(SpecialCharacters, '_');
-                        if ($("#SourceAppID").val() != '') { Script += '$' + $("#SourceAppID").val(); }
-                        Script += ']';
+    [` + TargetColumns[i].replace(SpecialCharacters, '_') + `] = SourceTable.[` + SourceColumns[i].replace(SpecialCharacters, '_') + `]`;
                     }
                 }
                 Script += `
 FROM 
     [` + TargetServer + `].[` + TargetDatabase + `].[dbo].[`;
-                if ($("#TargetCompany").val() != '') { Script += $("#TargetCompany").val() + '$'; }
-                Script += TargetTable + `] TargetTable
+                if ($("#TargetCompany").val() != '') { Script += $("#TargetCompany").val() + '$' + TargetTable; } else { Script += TargetTable }
+                if ($("#TargetAppID").val() != '') { Script += '$' + $("#TargetAppID").val(); }
+                Script += `] TargetTable
 INNER JOIN 
     [` + SourceServer + `].[` + SourceDatabase + `].[dbo].[`;
-                if ($("#SourceCompany").val() != '') { Script += $("#SourceCompany").val() + '$'; }
-                Script += SourceTable + `] SourceTable
+                if ($("#SourceCompany").val() != '') { Script += $("#SourceCompany").val() + '$' + SourceTable; } else { Script += SourceTable }
+                if ($("#SourceAppID").val() != '') { Script += '$' + $("#SourceAppID").val(); }
+                Script += `] SourceTable
         ON`;
                 SourcePKs = $('#SourcePKs').val().split(/\n/);
                 TargetPKs = $('#TargetPKs').val().split(/\n/);
