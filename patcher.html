@@ -179,7 +179,7 @@
             var TargetPKs = [];
             var Script = ``;
             var SpecialCharacters = /\.|\%|\/|\\|\^|\#|\!|\'/gm;
-
+            //Populating Target fields on change
             $("#SourceServer").on("input", function () {
                 SourceServer = $("#SourceServer").val();
                 $("#TargetServer").val(SourceServer);
@@ -200,7 +200,7 @@
                 SourcePKs = $("#SourcePKs").val();
                 $("#TargetPKs").val(SourcePKs);
             });
-
+            //Functions for buttons
             $("#Copy").click(function () {
                 $("#Script").select();
                 document.execCommand("copy");
@@ -218,62 +218,52 @@
                 TargetServer = $("#TargetServer").val();
                 TargetDatabase = $("#TargetDatabase").val();
                 TargetTable = $("#TargetTable").val();
-                
                 SourceColumns = $("#SourceColumns").val().split(/\n/);
                 TargetColumns = $("#TargetColumns").val().split(/\n/);
-
                 Script = `UPDATE TargetTable
 SET`;
                 for (var i = 0; i < SourceColumns.length; i++) {
                     if (i > 0) {
                         Script += `
-    ,[`;
-                        if($("#TargetCompany").val() != '') {Script += $("#TargetCompany").val() + '$';}
-                        Script += TargetColumns[i].replace(SpecialCharacters, '_');
-                        if($("#TargetAppID").val() != '') {Script += '$' + $("#TargetAppID").val();}
-                        Script += `] = SourceTable.[`;
-                        if($("#TargetCompany").val() != '') {Script += $("#TargetCompany").val() + '$';}
-                        Script += SourceColumns[i].replace(SpecialCharacters, '_');
-                        if($("#SourceAppID").val() != '') {Script += '$' + $("#SourceAppID").val();}
+    ,[` + TargetColumns[i].replace(SpecialCharacters, '_');
+                        if ($("#TargetAppID").val() != '') { Script += '$' + $("#TargetAppID").val(); }
+                        Script += `] = SourceTable.[` + SourceColumns[i].replace(SpecialCharacters, '_');
+                        if ($("#SourceAppID").val() != '') { Script += '$' + $("#SourceAppID").val(); }
                         Script += ']';
                     } else {
                         Script += `
-    [`;
-                        if($("#TargetCompany").val() != '') {Script += $("#TargetCompany").val() + '$';}
-                        Script += TargetColumns[i].replace(SpecialCharacters, '_');
-                        if($("#TargetAppID").val() != '') {Script += '$' + $("#TargetAppID").val();}
-                        Script += `] = SourceTable.[`;
-                        if($("#SourceCompany").val() != '') {Script += $("#SourceCompany").val() + '$';}
-                        Script += SourceColumns[i].replace(SpecialCharacters, '_');
-                        if($("#SourceAppID").val() != '') {Script += '$' + $("#SourceAppID").val();}
+    [` + TargetColumns[i].replace(SpecialCharacters, '_');
+                        if ($("#TargetAppID").val() != '') { Script += '$' + $("#TargetAppID").val(); }
+                        Script += `] = SourceTable.[` + SourceColumns[i].replace(SpecialCharacters, '_');
+                        if ($("#SourceAppID").val() != '') { Script += '$' + $("#SourceAppID").val(); }
                         Script += ']';
                     }
                 }
-
                 Script += `
 FROM 
-    [` + TargetServer + `].[` + TargetDatabase + `].[dbo].[` + TargetTable + `] TargetTable
+    [` + TargetServer + `].[` + TargetDatabase + `].[dbo].[`;
+                if ($("#TargetCompany").val() != '') { Script += $("#TargetCompany").val() + '$'; }
+                Script += TargetTable + `] TargetTable
 INNER JOIN 
-    [` + SourceServer + `].[` + SourceDatabase + `].[dbo].[` + SourceTable + `] SourceTable
+    [` + SourceServer + `].[` + SourceDatabase + `].[dbo].[`;
+                if ($("#SourceCompany").val() != '') { Script += $("#SourceCompany").val() + '$'; }
+                Script += SourceTable + `] SourceTable
         ON`;
-
                 SourcePKs = $('#SourcePKs').val().split(/\n/);
                 TargetPKs = $('#TargetPKs').val().split(/\n/);
-
                 for (var i = 0; i < SourcePKs.length; i++) {
                     if (i > 0) {
-                    Script += `
-            AND TargetTable.[` + TargetPKs[i] + `] = SourceServer.[` + SourcePKs[i] + ']';
+                        Script += `
+            AND TargetTable.[` + TargetPKs[i].replace(SpecialCharacters, '_') + `] = SourceServer.[` + SourcePKs[i].replace(SpecialCharacters, '_') + ']';
                     } else {
-                    Script += `
-            TargetTable.[` + TargetPKs[0] + `] = SourceServer.[` + SourcePKs[0] + ']';
+                        Script += `
+            TargetTable.[` + TargetPKs[0].replace(SpecialCharacters, '_') + `] = SourceServer.[` + SourcePKs[0].replace(SpecialCharacters, '_') + ']';
                     }
                 }
-
                 $("#Script").val(Script);
             });
-
         });
     </script>
 </body>
+
 </html>
