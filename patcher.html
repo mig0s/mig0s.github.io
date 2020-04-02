@@ -248,10 +248,10 @@ INNER JOIN
                 for (var i = 0; i < SourcePKs.length; i++) {
                     if (i > 0) {
                         Script += `
-            AND TargetTable.[` + TargetPKs[i].replace(SpecialCharacters, '_') + `] = SourceServer.[` + SourcePKs[i].replace(SpecialCharacters, '_') + ']';
+            AND TargetTable.[` + TargetPKs[i].replace(SpecialCharacters, '_') + `] = SourceTable.[` + SourcePKs[i].replace(SpecialCharacters, '_') + ']';
                     } else {
                         Script += `
-            TargetTable.[` + TargetPKs[0].replace(SpecialCharacters, '_') + `] = SourceServer.[` + SourcePKs[0].replace(SpecialCharacters, '_') + ']';
+            TargetTable.[` + TargetPKs[0].replace(SpecialCharacters, '_') + `] = SourceTable.[` + SourcePKs[0].replace(SpecialCharacters, '_') + ']';
                     }
                 }
                 $("#Script").val(Script);
